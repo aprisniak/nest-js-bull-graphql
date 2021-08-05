@@ -10,16 +10,11 @@ scalar DateTime
 # TYPES
 type Name {
   first: String!
-  last: String!
-}
-
-type Locales {
-  en: Name!
-  ru: Name!
+  last: String
 }
 
 type Employee {
-  name: Locales!
+  name: Name!
   hash: String!
 }
 

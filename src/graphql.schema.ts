@@ -21,16 +21,11 @@ export interface CustomerInput {
 
 export interface Name {
     first: string;
-    last: string;
-}
-
-export interface Locales {
-    en: Name;
-    ru: Name;
+    last?: Nullable<string>;
 }
 
 export interface Employee {
-    name: Locales;
+    name: Name;
     hash: string;
 }
 
@@ -40,29 +35,14 @@ export interface IMutation {
     createCustomer(customer: CustomerInput): Customer | Promise<Customer>;
 }
 
-export interface CustomerEmail {
-    email: string;
-}
-
-export interface CustomerPhone {
-    phone: string;
-}
-
 export interface CustomerName {
     first: string;
     last?: Nullable<string>;
 }
 
-export interface CustomerNameLocales {
-    ru: CustomerName;
-    en?: Nullable<CustomerName>;
-}
-
 export interface Customer {
-    hash: string;
     name: string;
     email: string;
-    phone: string;
     created: DateTime;
 }
 
@@ -80,7 +60,7 @@ export interface PaginatedReturn {
 }
 
 export interface IQuery {
-    getCustomers(page?: Nullable<number>, size?: Nullable<number>): PaginatedReturn | Promise<PaginatedReturn>;
+    getCustomers(page: number, size: number): PaginatedReturn | Promise<PaginatedReturn>;
 }
 
 export type DateTime = any;

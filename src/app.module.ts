@@ -45,6 +45,7 @@ import { ConfigService } from './internal/config/config.service';
                         attempts:         10,
                         removeOnComplete: true,
                         backoff:          3000,
+                        removeOnFail:     true,
                     },
                     redis: {
                         host:     config.get('REDIS_HOST'),

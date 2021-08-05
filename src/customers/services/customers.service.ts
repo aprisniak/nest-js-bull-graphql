@@ -9,24 +9,25 @@ import bcrypt from 'bcryptjs';
 import { ICustomersModel } from '../interfaces';
 import { PaginationType } from '../../types';
 import { Credentials, CustomerInput, PaginatedReturn } from '../../graphql.schema';
-
-const logger = new Logger('CustomersService');
+import { ICustomerCreate } from '../types';
 
 @Injectable()
 export class CustomersService {
+    private readonly logger = new Logger(CustomersService.name);
+
     constructor(
         @InjectModel('customers')
         private readonly customerModel: PaginateModel<ICustomersModel>, // eslint-disable-next-line no-empty-function
     ) {}
 
-    async createCustomer(body: CustomerInput, ip?: string): Promise<any> {
+    async createCustomer(body: CustomerInput & { ip?: string }): Promise<any> {
         const {
-            name, email, phone, password,
+            name, email, phone, password, ip,
         } = body;
         const [first, last] = name.split(/\s+/);
         const hashedPassword = await bcrypt.hash(password, 11);
 
-        const resource = await this.customerModel.create({
+        const customer: ICustomerCreate = {
             name: {
                 first,
                 last,
@@ -35,9 +36,11 @@ export class CustomersService {
             phone,
             password: hashedPassword,
             ip,
-        });
+        };
 
-        logger.debug('Service: [createCustomer]');
+        const resource = await this.customerModel.create(customer);
+
+        this.logger.verbose('Service: [createCustomer]');
 
         return resource;
     }
@@ -68,12 +71,12 @@ export class CustomersService {
             nextPage,
         } = users;
 
-        logger.debug('Service: [getCustomers]');
+        this.logger.verbose('Service: [getCustomers]');
 
         return {
             // TODO; fix it
             // @ts-ignore
-            docs,
+            docs:        docs.map((item) => ({ ...item, name: `${item.name.first} ${item.name.first}` })),
             totalDocs,
             limit,
             totalPages,
@@ -96,7 +99,7 @@ export class CustomersService {
             .lean();
 
         if (!source) {
-            logger.error(`customer with email ${email} not found or has been blocked`);
+            this.logger.error(`customer with email ${email} not found or has been blocked`);
 
             throw new ApolloError('credentials not valid');
         }
@@ -107,7 +110,7 @@ export class CustomersService {
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
 
         if (!isPasswordValid) {
-            logger.error(`customer with email ${email} provided wrong password`);
+            this.logger.error(`customer with email ${email} provided wrong password`);
 
             throw new AuthenticationError('credentials not valid');
         }

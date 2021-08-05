@@ -17,10 +17,10 @@ import {
     Credentials, Employee,
 } from '../../graphql.schema';
 
-const logger = new Logger('AuthResolver');
-
 @Resolver('Auth')
 export class AuthResolver {
+    private readonly logger = new Logger(AuthResolver.name);
+
     constructor(
         private readonly customersService: CustomersService,
         private readonly redisService: CacheService,
@@ -36,10 +36,13 @@ export class AuthResolver {
             @Args('credentials') credentials: Credentials,
     ): Promise<Employee> {
         try {
+            const { req: { session } } = context;
             const customer = await this.customersService.login(credentials);
             const { hash, name } = customer;
 
-            logger.verbose('GQL Query: [login]');
+            session.user = { hash, name };
+
+            this.logger.verbose('GQL Query: [login]');
 
             return {
                 hash,
@@ -70,7 +73,7 @@ export class AuthResolver {
                 });
             }
 
-            logger.verbose('GQL Query: [logout]');
+            this.logger.verbose('GQL Query: [logout]');
 
             return user;
         } catch ({ name, message }) {

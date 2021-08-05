@@ -10,29 +10,14 @@ input CustomerInput {
 scalar DateTime
 
 # TYPES
-type CustomerEmail {
-  email: String!
-}
-
-type CustomerPhone {
-  phone: String!
-}
-
 type CustomerName {
   first: String!
   last: String
 }
 
-type CustomerNameLocales {
-  ru: CustomerName!
-  en: CustomerName
-}
-
 type Customer {
-  hash: String!
   name: String!
   email: String!
-  phone: String!
   created: DateTime!
 }
 
@@ -51,7 +36,7 @@ type PaginatedReturn {
 
 # QUERY & MUTATIONS
 type Query {
-  getCustomers(page: Int, size: Int): PaginatedReturn!
+  getCustomers(page: Int!, size: Int!): PaginatedReturn!
 }
 
 type Mutation {

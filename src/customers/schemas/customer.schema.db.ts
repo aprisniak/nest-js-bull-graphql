@@ -1,9 +1,6 @@
 import * as mongoose from 'mongoose';
-
-// TODO; fix it
-// Bug with package
-// eslint-disable-next-line
-const mongoosePaginate = require('mongoose-paginate-v2');
+import uniqueValidator from 'mongoose-unique-validator';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 export const CustomerSchema: mongoose.Schema = new mongoose.Schema(
     {
@@ -18,8 +15,7 @@ export const CustomerSchema: mongoose.Schema = new mongoose.Schema(
                 required: true,
             },
             last: {
-                type:     String,
-                required: true,
+                type: String,
             },
         },
         email: {
@@ -35,6 +31,9 @@ export const CustomerSchema: mongoose.Schema = new mongoose.Schema(
             type:     String,
             required: true,
         },
+        ip: {
+            type: String,
+        },
     },
     {
         timestamps: { createdAt: 'created', updatedAt: 'modified' },
@@ -42,3 +41,4 @@ export const CustomerSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 CustomerSchema.plugin(mongoosePaginate);
+CustomerSchema.plugin(uniqueValidator);
