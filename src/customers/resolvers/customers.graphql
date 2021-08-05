@@ -1,0 +1,59 @@
+# INPUTS
+input CustomerInput {
+  name: String!
+  email: String!
+  phone: String!
+  password: String!
+}
+
+# SCALARS
+scalar DateTime
+
+# TYPES
+type CustomerEmail {
+  email: String!
+}
+
+type CustomerPhone {
+  phone: String!
+}
+
+type CustomerName {
+  first: String!
+  last: String
+}
+
+type CustomerNameLocales {
+  ru: CustomerName!
+  en: CustomerName
+}
+
+type Customer {
+  hash: String!
+  name: String!
+  email: String!
+  phone: String!
+  created: DateTime!
+}
+
+type PaginatedReturn {
+  docs: [Customer!]!
+  totalDocs: Int!
+  limit: Int!
+  totalPages: Int!
+  page: Int!
+  pagingCounter: Int!
+  hasPrevPage: Boolean!
+  hasNextPage: Boolean!
+  prevPage: Int!
+  nextPage: Int!
+}
+
+# QUERY & MUTATIONS
+type Query {
+  getCustomers(page: Int, size: Int): PaginatedReturn!
+}
+
+type Mutation {
+  createCustomer(customer: CustomerInput!): Customer!
+}

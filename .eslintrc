@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "@sotream/eslint-config-nestjs"
+  ]
+}

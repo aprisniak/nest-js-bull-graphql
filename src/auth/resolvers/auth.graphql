@@ -1,0 +1,30 @@
+# INPUTS
+input Credentials {
+  email: String!
+  password: String!
+}
+
+# SCALARS
+scalar DateTime
+
+# TYPES
+type Name {
+  first: String!
+  last: String!
+}
+
+type Locales {
+  en: Name!
+  ru: Name!
+}
+
+type Employee {
+  name: Locales!
+  hash: String!
+}
+
+# QUERY & MUTATIONS
+type Mutation {
+  login(credentials: Credentials!): Employee!
+  logout: Employee!
+}
